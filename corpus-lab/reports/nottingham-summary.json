@@ -1,0 +1,216 @@
+{
+  "generatedAt": "2026-06-04T14:10:18.449Z",
+  "dataset": "nottingham",
+  "tuneCount": 1034,
+  "phraseCount": 2574,
+  "noteCount": 105926,
+  "chordEventCount": 26892,
+  "bySubset": {
+    "ashover": {
+      "tunes": 46,
+      "phrases": 106,
+      "notes": 4317,
+      "chords": 1066
+    },
+    "hpps": {
+      "tunes": 65,
+      "phrases": 129,
+      "notes": 7715,
+      "chords": 1532
+    },
+    "jigs": {
+      "tunes": 340,
+      "phrases": 874,
+      "notes": 35486,
+      "chords": 9301
+    },
+    "morris": {
+      "tunes": 31,
+      "phrases": 60,
+      "notes": 2612,
+      "chords": 702
+    },
+    "playford": {
+      "tunes": 15,
+      "phrases": 28,
+      "notes": 1065,
+      "chords": 357
+    },
+    "reelsa-c": {
+      "tunes": 81,
+      "phrases": 184,
+      "notes": 7925,
+      "chords": 1991
+    },
+    "reelsd-g": {
+      "tunes": 84,
+      "phrases": 206,
+      "notes": 9274,
+      "chords": 2116
+    },
+    "reelsh-l": {
+      "tunes": 90,
+      "phrases": 228,
+      "notes": 9263,
+      "chords": 2245
+    },
+    "reelsm-q": {
+      "tunes": 80,
+      "phrases": 202,
+      "notes": 8234,
+      "chords": 2115
+    },
+    "reelsr-t": {
+      "tunes": 92,
+      "phrases": 227,
+      "notes": 9958,
+      "chords": 2269
+    },
+    "reelsu-z": {
+      "tunes": 34,
+      "phrases": 91,
+      "notes": 3810,
+      "chords": 957
+    },
+    "slip": {
+      "tunes": 11,
+      "phrases": 16,
+      "notes": 1024,
+      "chords": 281
+    },
+    "waltzes": {
+      "tunes": 52,
+      "phrases": 204,
+      "notes": 4604,
+      "chords": 1681
+    },
+    "xmas": {
+      "tunes": 13,
+      "phrases": 19,
+      "notes": 639,
+      "chords": 279
+    }
+  },
+  "topChords": [
+    {
+      "name": "G",
+      "count": 5499
+    },
+    {
+      "name": "D",
+      "count": 5238
+    },
+    {
+      "name": "A",
+      "count": 2390
+    },
+    {
+      "name": "A7",
+      "count": 2094
+    },
+    {
+      "name": "C",
+      "count": 2028
+    },
+    {
+      "name": "D7",
+      "count": 1904
+    },
+    {
+      "name": "Em",
+      "count": 1574
+    },
+    {
+      "name": "Am",
+      "count": 1245
+    },
+    {
+      "name": "E7",
+      "count": 887
+    },
+    {
+      "name": "Bm",
+      "count": 671
+    },
+    {
+      "name": "F",
+      "count": 537
+    },
+    {
+      "name": "G7",
+      "count": 337
+    },
+    {
+      "name": "E",
+      "count": 333
+    },
+    {
+      "name": "Dm",
+      "count": 316
+    },
+    {
+      "name": "Gm",
+      "count": 244
+    },
+    {
+      "name": "Bb",
+      "count": 213
+    },
+    {
+      "name": "B7",
+      "count": 194
+    },
+    {
+      "name": "C7",
+      "count": 163
+    },
+    {
+      "name": "F#m",
+      "count": 130
+    },
+    {
+      "name": "D/f+",
+      "count": 102
+    },
+    {
+      "name": "Cm",
+      "count": 85
+    },
+    {
+      "name": "G/b",
+      "count": 67
+    },
+    {
+      "name": "F7",
+      "count": 59
+    },
+    {
+      "name": "Eb",
+      "count": 55
+    },
+    {
+      "name": "F#7",
+      "count": 54
+    },
+    {
+      "name": "A7/e",
+      "count": 40
+    },
+    {
+      "name": "A/c+",
+      "count": 39
+    },
+    {
+      "name": "D/a",
+      "count": 26
+    },
+    {
+      "name": "B",
+      "count": 21
+    },
+    {
+      "name": "A7/c+",
+      "count": 21
+    }
+  ]
+}

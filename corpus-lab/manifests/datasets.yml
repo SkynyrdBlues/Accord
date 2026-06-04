@@ -1,0 +1,120 @@
+version: 1
+created_at: "2026-06-04"
+workspace: "corpus-lab"
+policy:
+  public_demo_rule: "Use public-domain or clearly licensed sources for website master comparisons."
+  training_rule: "Keep raw provenance and license notes for every dataset before mixing corpora."
+  storage_rule: "Raw, interim, and processed corpus files are ignored by git."
+datasets:
+  - id: nottingham
+    priority: P0
+    source_url: "https://github.com/jukedeck/nottingham-dataset"
+    download_url: "https://github.com/jukedeck/nottingham-dataset/archive/refs/heads/master.zip"
+    raw_dir: "corpus-lab/raw/nottingham"
+    formats: ["ABC", "MIDI"]
+    has_chords: true
+    has_melody: true
+    best_use: ["melody_to_chord_baseline", "short_phrase_continuation", "folk_style_eval"]
+    license: "GPL-3.0 in cleaned repository; preserve original provenance."
+    status: scripted
+  - id: pop909
+    priority: P0
+    source_url: "https://github.com/music-x-lab/POP909-Dataset"
+    download_url: "https://github.com/music-x-lab/POP909-Dataset/raw/master/POP909.zip"
+    raw_dir: "corpus-lab/raw/pop909"
+    formats: ["MIDI", "TXT", "XLSX"]
+    has_chords: true
+    has_melody: true
+    has_accompaniment: true
+    best_use: ["core_training", "style_conditioning", "melody_harmony_accompaniment_alignment"]
+    license: "MIT repository license; use pop-song material carefully in demos."
+    status: scripted
+  - id: maestro_midi
+    priority: P0
+    source_url: "https://magenta.tensorflow.org/datasets/maestro"
+    download_url: "https://storage.googleapis.com/magentadata/datasets/maestro/v3.0.0/maestro-v3.0.0-midi.zip"
+    raw_dir: "corpus-lab/raw/maestro"
+    formats: ["MIDI", "CSV", "JSON"]
+    has_chords: false
+    has_melody: false
+    best_use: ["piano_performance_style", "velocity_timing_modeling", "master_reference_visualization"]
+    license: "CC BY-NC-SA 4.0"
+    status: scripted
+  - id: asap
+    priority: P1
+    source_url: "https://github.com/fosfrancesco/asap-dataset"
+    download_url: "https://github.com/fosfrancesco/asap-dataset/archive/refs/heads/master.zip"
+    raw_dir: "corpus-lab/raw/asap"
+    formats: ["MIDI", "MusicXML", "CSV", "JSON"]
+    has_chords: false
+    has_alignment: true
+    best_use: ["score_performance_alignment", "classical_reference_comparison", "tension_curve_eval"]
+    license: "CC BY-NC-SA 4.0"
+    status: scripted
+  - id: dcml_abc
+    priority: P1
+    source_url: "https://github.com/DCMLab/ABC"
+    download_url: "https://github.com/DCMLab/ABC/archive/refs/heads/main.zip"
+    raw_dir: "corpus-lab/raw/dcml-abc"
+    formats: ["TSV", "MuseScore"]
+    has_chords: true
+    has_harmony_analysis: true
+    best_use: ["roman_numeral_eval", "cadence_explanation", "expert_harmony_reference"]
+    license: "CC BY-NC-SA 4.0"
+    status: scripted
+  - id: mutopia
+    priority: P1
+    source_url: "https://www.mutopiaproject.org/"
+    raw_dir: "corpus-lab/raw/mutopia"
+    formats: ["PDF", "MIDI", "LilyPond"]
+    has_chords: false
+    best_use: ["public_domain_master_library", "website_comparison_examples"]
+    license: "Public Domain or Creative Commons per piece."
+    status: planned
+  - id: choco
+    priority: P1
+    source_url: "https://github.com/smashub/choco"
+    download_url: "https://github.com/smashub/choco/archive/refs/heads/main.zip"
+    raw_dir: "corpus-lab/raw/choco"
+    formats: ["JAMS", "RDF"]
+    has_chords: true
+    best_use: ["chord_notation_standardization", "chord_prior", "harmonic_eval"]
+    license: "Dual license: mostly CC BY 4.0, some CC BY-NC-SA 4.0 subsets."
+    status: scripted_repo_only
+  - id: pdmx
+    priority: P1
+    source_url: "https://github.com/pnlong/PDMX"
+    data_url: "https://zenodo.org/records/15571083"
+    raw_dir: "corpus-lab/raw/pdmx"
+    formats: ["MusicXML", "MXL", "MIDI", "PDF", "JSON"]
+    has_chords: false
+    best_use: ["large_public_domain_symbolic_library", "master_style_retrieval", "visual_comparison_pool"]
+    license: "Dataset targets public-domain material; prefer no_license_conflict and all_valid subsets."
+    status: scripted_repo_only
+  - id: giantmidi_piano
+    priority: P2
+    source_url: "https://github.com/bytedance/GiantMIDI-Piano"
+    raw_dir: "corpus-lab/raw/giantmidi-piano"
+    formats: ["MIDI"]
+    has_chords: false
+    best_use: ["large_scale_classical_piano", "continuation_pretraining", "style_statistics"]
+    license: "CC BY 4.0; stable data download requires disclaimer confirmation."
+    status: scripted_repo_only
+  - id: lakh_midi
+    priority: P2
+    source_url: "https://colinraffel.com/projects/lmd/"
+    raw_dir: "corpus-lab/raw/lakh"
+    formats: ["MIDI", "JSON", "HDF5"]
+    has_chords: mixed
+    best_use: ["large_scale_pretraining", "retrieval_background", "dedup_experiments"]
+    license: "CC BY 4.0 dataset; original MIDI attribution is incomplete."
+    status: planned
+  - id: bfdb
+    priority: P2
+    source_url: "https://zenodo.org/records/14692025"
+    raw_dir: "corpus-lab/raw/bfdb"
+    formats: ["ABC"]
+    has_chords: false
+    best_use: ["melody_continuation", "motif_statistics", "folk_phrase_eval"]
+    license: "Record license must be copied from Zenodo before use."
+    status: planned

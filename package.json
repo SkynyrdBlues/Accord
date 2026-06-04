@@ -1,0 +1,17 @@
+{
+  "name": "projchord",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "packages/core"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w packages/core && npm run build -w apps/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "api": "python3 -m uvicorn packages.backend.app.main:app --reload --port 8000",
+    "corpus:nottingham": "bash scripts/corpus/prepare_nottingham.sh",
+    "corpus:nottingham:web-sample": "node scripts/corpus/export_nottingham_web_sample.mjs"
+  }
+}
