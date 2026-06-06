@@ -1,0 +1,113 @@
+{
+  "generatedAt": "2026-06-05T05:16:12.855Z",
+  "rows": [
+    {
+      "styleId": "stable_pop",
+      "label": "稳定流行",
+      "features": {
+        "notesPerBar": 3.5,
+        "harmonyNotesPerBar": 4.5,
+        "chordsPerBar": 1.5,
+        "seventhRatio": 0,
+        "avgMelodyDuration": 1.143,
+        "pitchRange": 9,
+        "offbeatHarmonyRatio": 0
+      }
+    },
+    {
+      "styleId": "soft_sparse",
+      "label": "温柔稀疏",
+      "features": {
+        "notesPerBar": 3.5,
+        "harmonyNotesPerBar": 3.75,
+        "chordsPerBar": 1.25,
+        "seventhRatio": 0,
+        "avgMelodyDuration": 1.143,
+        "pitchRange": 9,
+        "offbeatHarmonyRatio": 0.333
+      }
+    },
+    {
+      "styleId": "tension",
+      "label": "张力变化",
+      "features": {
+        "notesPerBar": 3.5,
+        "harmonyNotesPerBar": 6,
+        "chordsPerBar": 1.5,
+        "seventhRatio": 1,
+        "avgMelodyDuration": 1.143,
+        "pitchRange": 9,
+        "offbeatHarmonyRatio": 0
+      }
+    },
+    {
+      "styleId": "groove",
+      "label": "律动增强",
+      "features": {
+        "notesPerBar": 3.5,
+        "harmonyNotesPerBar": 4.5,
+        "chordsPerBar": 1.5,
+        "seventhRatio": 0,
+        "avgMelodyDuration": 1.143,
+        "pitchRange": 9,
+        "offbeatHarmonyRatio": 0.667
+      }
+    },
+    {
+      "styleId": "complex",
+      "label": "复杂一点",
+      "features": {
+        "notesPerBar": 3.5,
+        "harmonyNotesPerBar": 8.75,
+        "chordsPerBar": 2.25,
+        "seventhRatio": 0.889,
+        "avgMelodyDuration": 1.143,
+        "pitchRange": 9,
+        "offbeatHarmonyRatio": 0.486
+      }
+    },
+    {
+      "styleId": "loop_bgm",
+      "label": "循环 BGM",
+      "features": {
+        "notesPerBar": 3.5,
+        "harmonyNotesPerBar": 3.75,
+        "chordsPerBar": 1.25,
+        "seventhRatio": 0,
+        "avgMelodyDuration": 1.143,
+        "pitchRange": 9,
+        "offbeatHarmonyRatio": 0.333
+      }
+    }
+  ],
+  "controlClaims": {
+    "claims": [
+      {
+        "name": "complex_has_highest_chord_density",
+        "pass": true,
+        "observed": "2.25 > 1.5"
+      },
+      {
+        "name": "tension_uses_more_sevenths_than_stable",
+        "pass": true,
+        "observed": "1 > 0"
+      },
+      {
+        "name": "soft_sparse_has_longer_melody_notes_than_groove",
+        "pass": true,
+        "observed": "1.143 >= 1.143"
+      },
+      {
+        "name": "groove_has_more_offbeat_harmony_than_stable",
+        "pass": true,
+        "observed": "0.667 > 0"
+      },
+      {
+        "name": "loop_bgm_is_not_more_complex_than_complex",
+        "pass": true,
+        "observed": "1.25 < 2.25"
+      }
+    ],
+    "passRate": 1
+  }
+}

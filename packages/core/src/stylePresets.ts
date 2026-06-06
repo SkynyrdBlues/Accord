@@ -1,4 +1,4 @@
-import type { StylePreset } from "./types";
+import type { StylePreset } from "./types.js";
 
 export const STYLE_PRESETS: StylePreset[] = [
   {

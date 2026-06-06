@@ -1,0 +1,112 @@
+version: 1
+created_at: "2026-06-05"
+purpose: "Music concept prototypes for representation-guided retrieval, evaluation, and controllable generation."
+prototypes:
+  stable_pop:
+    target_features:
+      harmony_density: medium
+      rhythm_density: medium
+      chord_complexity: triad
+      tension: low
+    descriptors:
+      - "Diatonic triads with clear functional progressions."
+      - "Chord changes land mostly on strong beats."
+      - "Melody uses stable chord tones on long notes."
+      - "Moderate note density and small-to-medium melodic leaps."
+    measurable_attributes:
+      - chords_per_bar
+      - strong_beat_chord_tone_ratio
+      - diatonic_chord_ratio
+      - pitch_range
+  soft_sparse:
+    target_features:
+      harmony_density: low
+      rhythm_density: low
+      chord_complexity: triad
+      tension: low
+    descriptors:
+      - "Long note values and fewer melodic events."
+      - "Sparse accompaniment with sustained or arpeggiated harmony."
+      - "Low chromatic tension and smooth contour."
+    measurable_attributes:
+      - notes_per_bar
+      - average_note_duration
+      - long_note_ratio
+      - arpeggiation_ratio
+  tension:
+    target_features:
+      harmony_density: high
+      rhythm_density: medium
+      chord_complexity: seventh
+      tension: high
+    descriptors:
+      - "Frequent seventh chords and dominant-function sonorities."
+      - "Non-chord tones appear on expressive positions and resolve by step."
+      - "Chord progression creates local pull before release."
+    measurable_attributes:
+      - seventh_chord_ratio
+      - non_chord_tone_ratio
+      - stepwise_resolution_ratio
+      - dominant_motion_ratio
+  groove:
+    target_features:
+      harmony_density: medium
+      rhythm_density: high
+      chord_complexity: triad
+      tension: medium
+    descriptors:
+      - "Bass and chord attacks are offset rather than fully blocked."
+      - "Rhythmic placement creates forward motion."
+      - "Accompaniment has repeated rhythmic cells."
+    measurable_attributes:
+      - offbeat_onset_ratio
+      - bass_chord_offset
+      - rhythm_pattern_repetition
+      - notes_per_bar
+  complex:
+    target_features:
+      harmony_density: high
+      rhythm_density: high
+      chord_complexity: color
+      tension: high
+    descriptors:
+      - "Frequent harmonic changes with richer chord qualities."
+      - "Chromatic or color-chord events appear without losing local tonal center."
+      - "Melody includes larger vocabulary and more varied durations."
+    measurable_attributes:
+      - chords_per_bar
+      - seventh_chord_ratio
+      - chromatic_pitch_ratio
+      - duration_entropy
+  loop_bgm:
+    target_features:
+      harmony_density: medium
+      rhythm_density: medium
+      chord_complexity: triad
+      tension: low
+    descriptors:
+      - "Motif repetition is clear enough to loop."
+      - "Ending connects smoothly back to the beginning."
+      - "Harmony remains stable and predictable."
+    measurable_attributes:
+      - motif_repetition_score
+      - loop_closure_pitch_distance
+      - loop_closure_chord_distance
+      - chord_bigram_commonness
+  swing_jazz:
+    target_features:
+      harmony_density: high
+      rhythm_density: high
+      chord_complexity: color
+      tension: high
+    descriptors:
+      - "Triplet or swing-like subdivision shapes the melodic line."
+      - "Chromatic approach tones and enclosures decorate chord tones."
+      - "ii-V-I and dominant-resolution vocabulary are common."
+      - "Melodic phrases include syncopation and offbeat accents."
+    measurable_attributes:
+      - triplet_subdivision_ratio
+      - chromatic_approach_ratio
+      - enclosure_ratio
+      - ii_v_i_proxy_ratio
+      - syncopation_score

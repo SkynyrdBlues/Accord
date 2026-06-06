@@ -18,6 +18,7 @@ outputs/*
 corpus-lab/raw/*
 corpus-lab/interim/*
 corpus-lab/processed/*
+corpus-lab/reports/*-audit.json
 !corpus-lab/raw/.gitkeep
 !corpus-lab/interim/.gitkeep
 !corpus-lab/processed/.gitkeep

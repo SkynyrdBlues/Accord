@@ -47,4 +47,16 @@ npm run corpus:nottingham
 npm run corpus:nottingham:web-sample
 ```
 
+解析 POP909 主实验数据：
+
+```bash
+npm run corpus:pop909
+```
+
+如果缺少 ZIP，先运行：
+
+```bash
+bash scripts/corpus/download_pop909.sh
+```
+
 数据下载计划和风险表见 `docs/corpus/download-table.md`。

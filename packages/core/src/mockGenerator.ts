@@ -1,5 +1,5 @@
-import { STYLE_PRESETS } from "./stylePresets";
-import type { ChordEvent, Composition, NoteEvent, StylePresetId } from "./types";
+import { STYLE_PRESETS } from "./stylePresets.js";
+import type { ChordEvent, Composition, NoteEvent, StylePresetId } from "./types.js";
 
 const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
@@ -108,7 +108,15 @@ function renderHarmony(chords: ChordEvent[], styleId: StylePresetId): NoteEvent[
       continue;
     }
 
-    if (styleId === "groove" || styleId === "tension") {
+    if (styleId === "groove") {
+      notes.push(note(chordTones[0] - 12, event.startBeat, 0.6, "harmony", 0.7));
+      for (const pitch of chordTones.slice(1)) {
+        notes.push(note(pitch, event.startBeat + 0.5, Math.max(event.durationBeats - 0.5, 0.5), "harmony", 0.58));
+      }
+      continue;
+    }
+
+    if (styleId === "tension") {
       notes.push(note(chordTones[0] - 12, event.startBeat, 0.75, "harmony", 0.7));
       for (const pitch of chordTones.slice(1)) {
         notes.push(note(pitch, event.startBeat + 1, event.durationBeats - 1, "harmony", 0.58));

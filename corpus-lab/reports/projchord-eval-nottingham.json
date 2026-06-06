@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-06-05T05:16:12.114Z",
+  "dataset": "nottingham",
+  "sampleCount": 1200,
+  "fullPhraseCount": 2549,
+  "realScoreMean": 0.764,
+  "realComponentMeans": {
+    "melodyChordFit": 0.861,
+    "longNoteFit": 0.971,
+    "chordProgression": 0.416,
+    "corpusPlausibility": 0.753,
+    "continuationCoherence": 0.771
+  },
+  "corruptionResults": {
+    "random_chords": {
+      "count": 1200,
+      "rankingAccuracy": 0.994,
+      "tieRate": 0,
+      "meanMargin": 0.194,
+      "p10Margin": 0.097,
+      "p50Margin": 0.195,
+      "p90Margin": 0.289
+    },
+    "shifted_chords": {
+      "count": 1200,
+      "rankingAccuracy": 0.958,
+      "tieRate": 0.001,
+      "meanMargin": 0.049,
+      "p10Margin": 0.011,
+      "p50Margin": 0.043,
+      "p90Margin": 0.098
+    },
+    "shuffled_chords": {
+      "count": 1200,
+      "rankingAccuracy": 0.951,
+      "tieRate": 0.023,
+      "meanMargin": 0.074,
+      "p10Margin": 0.014,
+      "p50Margin": 0.068,
+      "p90Margin": 0.138
+    },
+    "swapped_continuation": {
+      "count": 1200,
+      "rankingAccuracy": 0.936,
+      "tieRate": 0.002,
+      "meanMargin": 0.06,
+      "p10Margin": 0.006,
+      "p50Margin": 0.052,
+      "p90Margin": 0.124
+    },
+    "wrong_key_chords": {
+      "count": 1200,
+      "rankingAccuracy": 1,
+      "tieRate": 0,
+      "meanMargin": 0.474,
+      "p10Margin": 0.352,
+      "p50Margin": 0.492,
+      "p90Margin": 0.567
+    }
+  }
+}

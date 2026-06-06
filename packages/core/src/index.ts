@@ -1,3 +1,3 @@
-export * from "./types";
-export * from "./stylePresets";
-export * from "./mockGenerator";
+export * from "./types.js";
+export * from "./stylePresets.js";
+export * from "./mockGenerator.js";

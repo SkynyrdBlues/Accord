@@ -38,6 +38,20 @@ interface SoundCombo {
   harmony: InstrumentId;
 }
 
+interface FifthsSlot {
+  major: string;
+  majorRoot: number;
+  minor: string;
+  minorRoot: number;
+}
+
+interface FifthsPoint {
+  x: number;
+  y: number;
+  slotIndex: number;
+  layer: "major" | "minor";
+}
+
 interface ActiveVoice {
   release: () => void;
 }
@@ -209,6 +223,20 @@ const soundCombos: SoundCombo[] = [
   { id: "box_pluck", label: "音乐盒 + 拨弦", melody: "music_box", harmony: "pluck" },
   { id: "piano_bass", label: "钢琴 + 低音", melody: "piano", harmony: "bass" }
 ];
+const fifthsSlots: FifthsSlot[] = [
+  { major: "C", majorRoot: 0, minor: "Am", minorRoot: 9 },
+  { major: "G", majorRoot: 7, minor: "Em", minorRoot: 4 },
+  { major: "D", majorRoot: 2, minor: "Bm", minorRoot: 11 },
+  { major: "A", majorRoot: 9, minor: "F#m", minorRoot: 6 },
+  { major: "E", majorRoot: 4, minor: "C#m", minorRoot: 1 },
+  { major: "B", majorRoot: 11, minor: "G#m", minorRoot: 8 },
+  { major: "F#", majorRoot: 6, minor: "Ebm", minorRoot: 3 },
+  { major: "Db", majorRoot: 1, minor: "Bbm", minorRoot: 10 },
+  { major: "Ab", majorRoot: 8, minor: "Fm", minorRoot: 5 },
+  { major: "Eb", majorRoot: 3, minor: "Cm", minorRoot: 0 },
+  { major: "Bb", majorRoot: 10, minor: "Gm", minorRoot: 7 },
+  { major: "F", majorRoot: 5, minor: "Dm", minorRoot: 2 }
+];
 const libraryReference = createLibraryReferenceComposition();
 
 app.innerHTML = `
@@ -246,6 +274,14 @@ app.innerHTML = `
         </div>
         <div class="pianoRoll" id="pianoRoll" aria-label="piano roll"></div>
         <div class="chordRail" id="chordRail" aria-label="chord rail"></div>
+        <section class="fifthsPanel" aria-label="circle of fifths">
+          <div>
+            <h2>五度圈</h2>
+            <p id="fifthsReadout"></p>
+            <div class="evalSnapshot" id="evalSnapshot" aria-label="evaluation snapshot"></div>
+          </div>
+          <svg class="fifthsSvg" id="fifthsSvg" viewBox="0 0 360 360" role="img" aria-label="circle of fifths chord path"></svg>
+        </section>
       </section>
     </section>
 
@@ -310,6 +346,9 @@ const controlReadout = getElement<HTMLDivElement>("controlReadout");
 const summary = getElement<HTMLParagraphElement>("summary");
 const pianoRoll = getElement<HTMLDivElement>("pianoRoll");
 const chordRail = getElement<HTMLDivElement>("chordRail");
+const fifthsSvg = getElement<SVGElement>("fifthsSvg");
+const fifthsReadout = getElement<HTMLParagraphElement>("fifthsReadout");
+const evalSnapshot = getElement<HTMLDivElement>("evalSnapshot");
 const keyboard = getElement<HTMLDivElement>("keyboard");
 const homeSections = Array.from(document.querySelectorAll<HTMLElement>(".appHome"));
 const comparisonPage = getElement<HTMLElement>("comparisonPage");
@@ -471,6 +510,8 @@ function renderComposition() {
 
   renderPianoRoll(composition);
   renderChordRail(composition);
+  renderCircleOfFifths(composition, null);
+  renderEvalSnapshot(composition);
 
   if (isComparisonOpen) {
     renderComparisonPage();
@@ -618,11 +659,182 @@ function renderChordRail(nextComposition: Composition) {
     const width = (chord.durationBeats / maxBeat) * 100;
 
     block.className = "chordBlock";
+    block.dataset.name = chord.name;
+    block.dataset.startBeat = String(chord.startBeat);
     block.style.left = `calc(${left}% + 2px)`;
     block.style.width = `calc(${width}% - 4px)`;
     block.textContent = chord.name;
     chordRail.appendChild(block);
   }
+}
+
+function renderCircleOfFifths(nextComposition: Composition, activeChord: ChordEvent | null) {
+  fifthsSvg.innerHTML = renderCircleOfFifthsSvg(nextComposition, activeChord);
+  fifthsReadout.textContent = activeChord
+    ? `${activeChord.name} / ${fifthsLayerLabel(activeChord)} / ${describeChordMotion(nextComposition, activeChord)}`
+    : `${nextComposition.chords.map((chord) => chord.name).join(" -> ")}`;
+}
+
+function renderCircleOfFifthsSvg(nextComposition: Composition, activeChord: ChordEvent | null) {
+  const center = 180;
+  const outerRadius = 134;
+  const innerRadius = 86;
+  const slotPoints = fifthsSlots.map((slot, index) => {
+    const angle = -Math.PI / 2 + (index / fifthsSlots.length) * Math.PI * 2;
+    return {
+      slot,
+      index,
+      majorPoint: {
+        x: center + Math.cos(angle) * outerRadius,
+        y: center + Math.sin(angle) * outerRadius,
+        slotIndex: index,
+        layer: "major" as const
+      },
+      minorPoint: {
+        x: center + Math.cos(angle) * innerRadius,
+        y: center + Math.sin(angle) * innerRadius,
+        slotIndex: index,
+        layer: "minor" as const
+      }
+    };
+  });
+  const pathPoints = nextComposition.chords
+    .map((chord) => getFifthsPointForChord(chord, slotPoints))
+    .filter((point): point is FifthsPoint => Boolean(point));
+  const pathData = renderFifthsPath(pathPoints);
+  const activePoint = activeChord ? getFifthsPointForChord(activeChord, slotPoints) : null;
+
+  const nodes = slotPoints.map(({ slot, index, majorPoint, minorPoint }) => {
+    const majorUsed = nextComposition.chords.some((chord) => !isInnerFifthsChord(chord) && chord.root === slot.majorRoot);
+    const minorUsed = nextComposition.chords.some((chord) => isInnerFifthsChord(chord) && chord.root === slot.minorRoot);
+    const majorActive = Boolean(activeChord && !isInnerFifthsChord(activeChord) && activeChord.root === slot.majorRoot);
+    const minorActive = Boolean(activeChord && isInnerFifthsChord(activeChord) && activeChord.root === slot.minorRoot);
+    const majorClassName = ["fifthsNode", "major", majorUsed ? "used" : "", majorActive ? "active" : ""].filter(Boolean).join(" ");
+    const minorClassName = ["fifthsNode", "minor", minorUsed ? "used" : "", minorActive ? "active" : ""].filter(Boolean).join(" ");
+
+    return `
+      <g class="${majorClassName}" style="--node-index: ${index}">
+        <circle cx="${majorPoint.x.toFixed(1)}" cy="${majorPoint.y.toFixed(1)}" r="${majorActive ? 20 : 17}" />
+        <text x="${majorPoint.x.toFixed(1)}" y="${(majorPoint.y + 5).toFixed(1)}" text-anchor="middle">${slot.major}</text>
+      </g>
+      <g class="${minorClassName}" style="--node-index: ${index}">
+        <circle cx="${minorPoint.x.toFixed(1)}" cy="${minorPoint.y.toFixed(1)}" r="${minorActive ? 16 : 13}" />
+        <text x="${minorPoint.x.toFixed(1)}" y="${(minorPoint.y + 4).toFixed(1)}" text-anchor="middle">${slot.minor}</text>
+      </g>
+    `;
+  }).join("");
+
+  return `
+    <defs>
+      <radialGradient id="fifthsCenterGlow" cx="50%" cy="50%" r="55%">
+        <stop offset="0%" stop-color="#f7faf9" />
+        <stop offset="72%" stop-color="#edf7f1" />
+        <stop offset="100%" stop-color="#ffffff" />
+      </radialGradient>
+      <linearGradient id="fifthsPathGradient" x1="38" y1="50" x2="320" y2="310" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#1d4ed8" />
+        <stop offset="46%" stop-color="#0f766e" />
+        <stop offset="100%" stop-color="#f59e0b" />
+      </linearGradient>
+      <filter id="fifthsSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.13" />
+      </filter>
+    </defs>
+    <circle class="fifthsOuter" cx="${center}" cy="${center}" r="${outerRadius + 30}" />
+    <circle class="fifthsMajorRing" cx="${center}" cy="${center}" r="${outerRadius}" />
+    <circle class="fifthsMinorRing" cx="${center}" cy="${center}" r="${innerRadius}" />
+    ${pathData ? `<path class="fifthsPath" d="${pathData}" />` : ""}
+    ${pathPoints.map((point, index) => `<circle class="fifthsPathDot ${point.layer}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${index === pathPoints.length - 1 ? 5 : 3}" />`).join("")}
+    ${activePoint ? `<circle class="fifthsActiveHalo ${activePoint.layer}" cx="${activePoint.x.toFixed(1)}" cy="${activePoint.y.toFixed(1)}" r="${activePoint.layer === "major" ? 27 : 22}" />` : ""}
+    ${nodes}
+    <text class="fifthsRingLabel major" x="${center}" y="${center - 116}" text-anchor="middle">Major</text>
+    <text class="fifthsRingLabel minor" x="${center}" y="${center - 66}" text-anchor="middle">minor</text>
+    <text class="fifthsCenterLabel" x="${center}" y="${center - 4}" text-anchor="middle">${activeChord ? fifthsLayerLabel(activeChord) : "Chord Map"}</text>
+    <text class="fifthsCenterChord" x="${center}" y="${center + 24}" text-anchor="middle">${activeChord ? escapeText(activeChord.name) : "Ready"}</text>
+  `;
+}
+
+function describeChordMotion(nextComposition: Composition, activeChord: ChordEvent) {
+  const activeIndex = nextComposition.chords.findIndex((chord) => chord === activeChord);
+  if (activeIndex <= 0) {
+    return "起点和弦";
+  }
+
+  const previousChord = nextComposition.chords[activeIndex - 1];
+  const previousIndex = fifthsSlotIndexForChord(previousChord);
+  const currentIndex = fifthsSlotIndexForChord(activeChord);
+
+  if (previousIndex < 0 || currentIndex < 0) {
+    return `${previousChord.name} -> ${activeChord.name}`;
+  }
+
+  const previousLayer = isInnerFifthsChord(previousChord) ? "内圈" : "外圈";
+  const currentLayer = isInnerFifthsChord(activeChord) ? "内圈" : "外圈";
+  const layerMotion = previousLayer === currentLayer ? previousLayer : `${previousLayer}到${currentLayer}`;
+  const clockwise = (currentIndex - previousIndex + fifthsSlots.length) % fifthsSlots.length;
+  const counterClockwise = (previousIndex - currentIndex + fifthsSlots.length) % fifthsSlots.length;
+
+  if (clockwise === 0) return `${previousChord.name} -> ${activeChord.name} / ${layerMotion}同位`;
+  if (clockwise === 1) return `${previousChord.name} -> ${activeChord.name} / ${layerMotion}顺五度`;
+  if (counterClockwise === 1) return `${previousChord.name} -> ${activeChord.name} / ${layerMotion}逆五度`;
+  return `${previousChord.name} -> ${activeChord.name} / ${layerMotion}跨 ${Math.min(clockwise, counterClockwise)} 格`;
+}
+
+function getFifthsPointForChord(
+  chord: ChordEvent,
+  slotPoints: Array<{
+    slot: FifthsSlot;
+    majorPoint: FifthsPoint;
+    minorPoint: FifthsPoint;
+  }>
+) {
+  const isInner = isInnerFifthsChord(chord);
+  const item = slotPoints.find(({ slot }) => isInner ? slot.minorRoot === chord.root : slot.majorRoot === chord.root);
+  return item ? (isInner ? item.minorPoint : item.majorPoint) : null;
+}
+
+function renderFifthsPath(points: FifthsPoint[]) {
+  if (points.length === 0) {
+    return "";
+  }
+
+  if (points.length === 1) {
+    return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+  }
+
+  const segments = [`M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`];
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const previous = points[Math.max(index - 1, 0)];
+    const current = points[index];
+    const next = points[index + 1];
+    const afterNext = points[Math.min(index + 2, points.length - 1)];
+    const controlOne = {
+      x: current.x + (next.x - previous.x) / 6,
+      y: current.y + (next.y - previous.y) / 6
+    };
+    const controlTwo = {
+      x: next.x - (afterNext.x - current.x) / 6,
+      y: next.y - (afterNext.y - current.y) / 6
+    };
+    segments.push(
+      `C ${controlOne.x.toFixed(1)} ${controlOne.y.toFixed(1)}, ${controlTwo.x.toFixed(1)} ${controlTwo.y.toFixed(1)}, ${next.x.toFixed(1)} ${next.y.toFixed(1)}`
+    );
+  }
+
+  return segments.join(" ");
+}
+
+function fifthsSlotIndexForChord(chord: ChordEvent) {
+  const isInner = isInnerFifthsChord(chord);
+  return fifthsSlots.findIndex((slot) => isInner ? slot.minorRoot === chord.root : slot.majorRoot === chord.root);
+}
+
+function isInnerFifthsChord(chord: ChordEvent) {
+  return chord.quality === "min" || chord.quality === "min7" || chord.quality === "dim";
+}
+
+function fifthsLayerLabel(chord: ChordEvent) {
+  return isInnerFifthsChord(chord) ? "内圈小调" : "外圈大调";
 }
 
 function playComparison() {
@@ -640,6 +852,8 @@ function playComparison() {
       flashKey(note.pitch, durationMs, note.track);
     }, startMs));
   }
+
+  scheduleChordVisualization(composition);
 
   for (const note of libraryReference.notes) {
     const startMs = beatsToMs(note.startBeat, libraryReference.tempo);
@@ -668,6 +882,8 @@ function playComposition() {
       flashKey(note.pitch, durationMs, note.track);
     }, startMs));
   }
+
+  scheduleChordVisualization(composition);
 }
 
 function handleComputerKeyDown(event: KeyboardEvent) {
@@ -740,8 +956,26 @@ function stopPlayback() {
   comparisonPage.classList.remove("isPlaying");
   playbackTimers = [];
   activePlaybackVoices = [];
+  renderCircleOfFifths(composition, null);
   for (const key of keyboard.querySelectorAll(".key.active")) {
     key.classList.remove("active", "melodyActive", "harmonyActive");
+  }
+}
+
+function scheduleChordVisualization(nextComposition: Composition) {
+  for (const chord of nextComposition.chords) {
+    const startMs = beatsToMs(chord.startBeat, nextComposition.tempo);
+    playbackTimers.push(window.setTimeout(() => {
+      renderCircleOfFifths(nextComposition, chord);
+      setActiveChordBlock(chord);
+    }, startMs));
+  }
+}
+
+function setActiveChordBlock(activeChord: ChordEvent) {
+  for (const block of chordRail.querySelectorAll<HTMLDivElement>(".chordBlock")) {
+    const isActive = block.dataset.startBeat === String(activeChord.startBeat) && block.dataset.name === activeChord.name;
+    block.classList.toggle("active", isActive);
   }
 }
 
@@ -1109,16 +1343,65 @@ function renderExplainGrid(generated: Composition, reference: Composition) {
     .join("");
 }
 
+function renderEvalSnapshot(piece: Composition) {
+  const metrics = getPieceMetrics(piece);
+  const evalItems = [
+    { label: "和弦音", value: `${formatMetric(metrics.compatibility)}%`, tone: "good" },
+    { label: "七和弦", value: `${formatMetric(metrics.seventhRatio)}%`, tone: "color" },
+    { label: "密度", value: `${formatMetric(metrics.chordDensity)}/bar`, tone: "neutral" },
+    { label: "错位", value: `${formatMetric(metrics.offbeatHarmonyRatio)}%`, tone: "motion" }
+  ];
+
+  evalSnapshot.innerHTML = `
+    <div class="evalSnapshotHeader">
+      <span>ProjChord-Eval</span>
+      <strong>${piece.bars} bars</strong>
+    </div>
+    <div class="evalPills">
+      ${evalItems.map((item) => `
+        <span class="evalPill ${item.tone}">
+          <small>${item.label}</small>
+          <b>${item.value}</b>
+        </span>
+      `).join("")}
+    </div>
+  `;
+}
+
 function getPieceMetrics(piece: Composition) {
-  const compatibility = compatibilityInWindow(piece, 0, piece.bars * 4);
-  const chordDensity = piece.chords.length / piece.bars;
-  const seventhRatio = (piece.chords.filter((chord) => chord.quality.includes("7")).length / piece.chords.length) * 100;
+  const maxBeat = compositionMaxBeat(piece);
+  const barCount = Math.max(maxBeat / 4, 1);
+  const compatibility = compatibilityInWindow(piece, 0, maxBeat);
+  const chordDensity = piece.chords.length / barCount;
+  const seventhRatio = piece.chords.length === 0
+    ? 0
+    : (piece.chords.filter((chord) => chord.quality.includes("7")).length / piece.chords.length) * 100;
+  const offbeatHarmonyRatio = getOffbeatHarmonyRatio(piece);
 
   return {
     compatibility,
     chordDensity,
-    seventhRatio
+    seventhRatio,
+    offbeatHarmonyRatio
   };
+}
+
+function compositionMaxBeat(piece: Composition) {
+  return Math.max(
+    piece.bars * 4,
+    ...piece.notes.map((note) => note.startBeat + note.durationBeats),
+    ...piece.chords.map((chord) => chord.startBeat + chord.durationBeats)
+  );
+}
+
+function getOffbeatHarmonyRatio(piece: Composition) {
+  const harmonyNotes = piece.notes.filter((note) => note.track === "harmony");
+  if (harmonyNotes.length === 0) {
+    return 0;
+  }
+
+  const offbeatNotes = harmonyNotes.filter((note) => Math.abs(note.startBeat - Math.round(note.startBeat)) > 0.08);
+  return (offbeatNotes.length / harmonyNotes.length) * 100;
 }
 
 function compatibilityInWindow(piece: Composition, startBeat: number, durationBeats: number) {

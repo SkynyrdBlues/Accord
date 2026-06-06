@@ -41,6 +41,16 @@
 
 第三阶段再开 PDMX、GiantMIDI、Lakh。它们数量大，但清洗成本和版权边界都更复杂，适合在基础 pipeline 稳了以后做。
 
+第四阶段加入 representation-guided 数据层。具体方案见 [../evaluation-representation.md](../evaluation-representation.md)，核心是用音乐特征、语义原型和真实/扰动样本校准评价器，而不是只看原曲和弦是否预测一致。
+
+POP909 解析入口已经准备好：
+
+```bash
+npm run corpus:pop909
+```
+
+当前本地环境下载 GitHub 时 DNS 被拦，已记录在 `corpus-lab/manifests/download-status.md`。ZIP 到位后，脚本会解析每首的 MIDI 轨道、`chord_midi.txt`、`key_audio.txt` 和 `beat_midi.txt`，输出 8 小节 phrase。
+
 ## Current Pipeline
 
 Nottingham 已经有第一版清洗入口：

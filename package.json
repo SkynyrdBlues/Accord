@@ -12,6 +12,10 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "api": "python3 -m uvicorn packages.backend.app.main:app --reload --port 8000",
     "corpus:nottingham": "bash scripts/corpus/prepare_nottingham.sh",
-    "corpus:nottingham:web-sample": "node scripts/corpus/export_nottingham_web_sample.mjs"
+    "corpus:nottingham:web-sample": "node scripts/corpus/export_nottingham_web_sample.mjs",
+    "corpus:nottingham:audit": "node scripts/corpus/audit_nottingham.mjs",
+    "corpus:pop909": "bash scripts/corpus/prepare_pop909.sh",
+    "eval:nottingham": "node scripts/eval/eval_nottingham.mjs",
+    "eval:controls": "npm run build -w packages/core && node scripts/eval/eval_controls.mjs"
   }
 }

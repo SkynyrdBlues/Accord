@@ -5,7 +5,7 @@
 | 数据集 | 状态 | 说明 |
 | --- | --- | --- |
 | Nottingham | parsed_and_exported | 已由用户本机下载到 `corpus-lab/raw/nottingham/nottingham-dataset-master.zip`；已解析出 1034 首、2574 个 8 小节片段，并导出 48 个网页样本。 |
-| POP909 | scripted_not_started | 下载脚本已写好，未启动批量下载。 |
+| POP909 | download_blocked_parser_ready | 下载脚本已写好；2026-06-05 本地 sandbox DNS 无法解析 github.com，已跳过链接耗时；解析入口 `npm run corpus:pop909` 已写好，等待 ZIP 到位。 |
 | MAESTRO MIDI-only | scripted_not_started | 下载脚本已写好，未启动批量下载。 |
 | ASAP | scripted_not_started | 下载脚本已写好，未启动批量下载。 |
 | DCML ABC | scripted_not_started | 下载脚本已写好，未启动批量下载。 |

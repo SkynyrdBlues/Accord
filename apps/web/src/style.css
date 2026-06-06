@@ -171,7 +171,7 @@ h2 {
 
 .stage {
   display: grid;
-  grid-template-rows: auto 1fr 72px;
+  grid-template-rows: auto minmax(280px, 1fr) 72px auto;
   gap: 12px;
   padding: 18px;
 }
@@ -245,6 +245,257 @@ h2 {
   color: #ffffff;
   font-size: 13px;
   font-weight: 800;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.chordBlock.active {
+  background: #2563eb;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+  transform: translateY(-2px);
+}
+
+.fifthsPanel {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(300px, 1.1fr);
+  align-items: center;
+  gap: 16px;
+  min-height: 330px;
+  border: 1px solid #cfd8e3;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, #fbfcfd 0%, #ffffff 44%, #f8fbf7 100%);
+  padding: 16px;
+  overflow: hidden;
+}
+
+.fifthsPanel h2 {
+  margin-bottom: 8px;
+}
+
+.fifthsPanel p {
+  margin: 0;
+  color: #607080;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.evalSnapshot {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.evalSnapshotHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #607080;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.evalSnapshotHeader strong {
+  color: #1f2933;
+  font-size: 13px;
+}
+
+.evalPills {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.evalPill {
+  display: grid;
+  gap: 4px;
+  min-height: 58px;
+  border: 1px solid #d9e0e7;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.evalPill small {
+  color: #607080;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.evalPill b {
+  color: #1f2933;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.evalPill.good {
+  border-color: rgba(15, 118, 110, 0.28);
+}
+
+.evalPill.color {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.evalPill.motion {
+  border-color: rgba(37, 99, 235, 0.28);
+}
+
+.fifthsSvg {
+  display: block;
+  width: 100%;
+  min-height: 300px;
+  max-height: 330px;
+}
+
+.fifthsOuter {
+  fill: url("#fifthsCenterGlow");
+  stroke: rgba(203, 213, 223, 0.95);
+  stroke-width: 2;
+}
+
+.fifthsMajorRing,
+.fifthsMinorRing {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.fifthsMajorRing {
+  stroke: rgba(37, 99, 235, 0.22);
+  stroke-width: 3;
+  stroke-dasharray: 2 10;
+}
+
+.fifthsMinorRing {
+  stroke: rgba(15, 118, 110, 0.22);
+  stroke-width: 2;
+  stroke-dasharray: 2 8;
+}
+
+.fifthsPath {
+  fill: none;
+  stroke: url("#fifthsPathGradient");
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 5;
+  stroke-dasharray: 14 9;
+  opacity: 0.82;
+  animation: fifthsFlow 8s linear infinite;
+}
+
+.fifthsPathDot {
+  fill: #ffffff;
+  stroke: #0f766e;
+  stroke-width: 2;
+}
+
+.fifthsPathDot.major {
+  stroke: #2563eb;
+}
+
+.fifthsActiveHalo {
+  fill: none;
+  stroke: #0f766e;
+  stroke-width: 3;
+  opacity: 0.45;
+  animation: fifthsPulse 1.8s ease-in-out infinite;
+}
+
+.fifthsActiveHalo.major {
+  stroke: #2563eb;
+}
+
+.fifthsNode circle {
+  fill: #ffffff;
+  stroke: #cbd5df;
+  stroke-width: 2;
+  transition: fill 220ms ease, r 220ms ease, stroke 220ms ease, filter 220ms ease;
+}
+
+.fifthsNode text {
+  fill: #1f2933;
+  font-size: 13px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.fifthsNode.minor text {
+  font-size: 11px;
+}
+
+.fifthsNode.minor circle {
+  fill: #fffdfa;
+}
+
+.fifthsNode.used circle {
+  fill: #eef5ff;
+  stroke: #2563eb;
+}
+
+.fifthsNode.minor.used circle {
+  fill: #eef8f4;
+  stroke: #0f766e;
+}
+
+.fifthsNode.active circle {
+  fill: #2563eb;
+  stroke: #1d4ed8;
+  filter: url("#fifthsSoftShadow");
+}
+
+.fifthsNode.minor.active circle {
+  fill: #0f766e;
+  stroke: #0f766e;
+}
+
+.fifthsNode.active text {
+  fill: #ffffff;
+}
+
+.fifthsRingLabel {
+  fill: #7b8794;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.fifthsRingLabel.minor {
+  fill: #0f766e;
+}
+
+.fifthsCenterLabel {
+  fill: #607080;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.fifthsCenterChord {
+  fill: #1f2933;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+@keyframes fifthsFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -92;
+  }
+}
+
+@keyframes fifthsPulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    stroke-width: 2;
+  }
+
+  50% {
+    opacity: 0.55;
+    stroke-width: 4;
+  }
 }
 
 .keyboardPanel {
@@ -695,6 +946,10 @@ h2 {
   }
 
   .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .fifthsPanel {
     grid-template-columns: 1fr;
   }
 
